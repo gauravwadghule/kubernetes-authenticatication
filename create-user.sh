@@ -69,22 +69,12 @@ echo "creating Client Certificate"
 kubectl get csr $commonname -o jsonpath='{.status.certificate}' | base64 --decode > ${commonname}-client-certificate.crt
 
 #creating clusterrole
-# echo "Creating Cluster Role"
-# cat << EOF > clusterRole.yaml
-# apiVersion: rbac.authorization.k8s.io/v1
-# kind: ClusterRole
-# metadata:
-#   namespace: default
-#   name: developer
-# rules:
-# - apiGroups: [""]
-#   resources: ["pods", "pods/log"]
-#   verbs: ["get", "list"]
-# EOF
+echo "Creating Cluster Role"
 
-# kubectl apply -f clusterRole.yaml
 
 kubectl create clusterrole developer --verb=get --resource=pods,pod/logs
+
+echo "Creating Cluster Role Binding"
 
 kubectl create clusterrolebinding developer-${commonname} --clusterrole=developer --user=${commonname}
 
